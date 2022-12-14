@@ -1,0 +1,9 @@
+UnlitGeneric
+{
+	"$basetexture" "vgui/hud/tfa_shotgun_shell"
+	"$vertexcolor" 		1
+	"$vertexalpha" 		1
+	"$nolod" 			1
+	"$nocull"			1
+	"$translucent" 1
+}

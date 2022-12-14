@@ -1,0 +1,9 @@
+UnlitGeneric
+{
+	"$basetexture" "vgui/hud/tfa_bullet_spent"
+	"$vertexcolor" 		1
+	"$vertexalpha" 		1
+	"$nolod" 			1
+	"$nocull"			1
+	"$translucent" 1
+}
