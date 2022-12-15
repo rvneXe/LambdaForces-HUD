@@ -579,10 +579,10 @@ if LocalPlayer then
 		end
 
 		-- print(ammo1type)
+		-- print(ammo2type)
 
 		
-		print(ammo2type)
-		-- SECOND AMMO ------------------
+		---- SECOND AMMO ------------------
 		WeaponNameInfo.pos = {xx+380,yy-150}
 		AmmoInfo.pos = {xx+370,yy-117}
 		if ammo2type!=-1 then
