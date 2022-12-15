@@ -216,6 +216,7 @@ if LocalPlayer then
 		xx=w*ScreenVars.x
 		yy=h-h*(ScreenVars.y)
 		
+
 		--draw.RoundedBox(0,0,yy,w,1,color_white)
 		
 		--Health	
@@ -425,17 +426,14 @@ if LocalPlayer then
 		---     Weapon & Ammo
 		---\/------------------------------\/--
 
-		xx = xx+1147
-
 		local AmmoGlobalColor = Color(255,255,255,255)
-		local ShapeLeftX = xx
 		local ShapeWidth
-
 		local wp = myplayer:GetActiveWeapon()
 		local wpid = wp:GetClass()
 		local wpname = wp:GetPrintName() 
 		local wpdisp
 		local wpcode
+
 
 		local a2code
 
@@ -496,13 +494,14 @@ if LocalPlayer then
 			['color'] = AmmoGlobalColor
 		}
 
+		xx = ScrW()
 
 		if wpcode=="0" then
-			WeaponNameInfo.pos = {xx+305,yy-67}
-			AmmoInfo.pos = {xx+320,yy-34}
+			WeaponNameInfo.pos = {xx-95,yy-67}
+			AmmoInfo.pos = {xx-90,yy-34}
 		else
-			WeaponNameInfo.pos = {xx+215,yy-67}
-			AmmoInfo.pos = {xx+220,yy-34}
+			WeaponNameInfo.pos = {xx-200,yy-67}
+			AmmoInfo.pos = {xx-200,yy-34}
 		end
 
 
@@ -515,12 +514,11 @@ if LocalPlayer then
 		local ammo2invt = myplayer:GetAmmoCount(ammo2type)
 
 		ShapeWidth = 460
-		ShapeLeftX = ShapeLeftX -60
+		ShapeLeftX = 0
 
 		local ammoleng = string.len(ammo1) + string.len(ammo1invt) + 1
 		local ammoaddi = ammoleng - 5
 		local ammolengaddi = 55 * ammoaddi
-
 
 		if ammo1type!=-1 then
 			
@@ -553,8 +551,8 @@ if LocalPlayer then
 
 		WeaponNameInfo.color = AmmoGlobalColor
 
-		if wpid=="weapon_357" then WeaponIconInfo.pos = {xx+380,yy-45}
-		else WeaponIconInfo.pos = {xx+380,yy-40}
+		if wpid=="weapon_357" then WeaponIconInfo.pos = {xx-25,yy-45}
+		else WeaponIconInfo.pos = {xx-25,yy-40}
 		end
 
 		WeaponIconInfo.color = AmmoGlobalColor
@@ -609,8 +607,11 @@ if LocalPlayer then
 			hook.Remove("HUDPaint", "clip2")
 		end
 
-		CyberpunkUIShape(ShapeLeftX, yy, BGColor, AmmoGlobalColor, ShapeWidth, 80, -16, 2, "weapon")
+		xx = ScrW()-ShapeWidth-10
+		CyberpunkUIShape(xx, yy, BGColor, AmmoGlobalColor, ShapeWidth, 80, -16, 2, "weapon")
 		
+		print(xx, ScrW())
+
 		render.SetScissorRect( 0, 0, 0, 0, false )
 		
 	end
