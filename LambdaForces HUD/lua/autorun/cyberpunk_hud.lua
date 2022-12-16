@@ -458,8 +458,9 @@ if LocalPlayer then
 		elseif string.find(wpid,"csgo_bayonet")!=nil then wpcode = "0"  wpdisp = "Bayonet Knife"
 		elseif string.find(wpid,"csgo_bowie")!=nil then wpcode = "0"  wpdisp = "Bowie Knife"
 		elseif string.find(wpid,"csgo_butterfly")!=nil then wpcode = "0"  wpdisp = "Butterfly Knife"
-		elseif string.find(wpid,"csgo_default_t_golden")!=nil then wpcode = "0"  wpdisp = "Default T Knife"
-		elseif string.find(wpid,"csgo_default_golden")!=nil then wpcode = "0"  wpdisp = "Default CT Knife"
+		elseif string.find(wpid,"csgo_default_t")!=nil then wpcode = "3"  wpdisp = "Default T Knife"
+		elseif string.find(wpid,"csgo_default")!=nil or string.find(wpid,"csgo_knife_t")!=nil then wpcode = "3"  wpdisp = "Default T Knife"
+		elseif string.find(wpid,"csgo_knife")!=nil then wpcode = "2"  wpdisp = "Default CT Knife"
 		elseif string.find(wpid,"csgo_falchion")!=nil then wpcode = "0"  wpdisp = "Falchion Knife"
 		elseif string.find(wpid,"csgo_flip")!=nil then wpcode = "0"  wpdisp = "Flip Knife"
 		elseif string.find(wpid,"csgo_gut")!=nil then wpcode = "0"  wpdisp = "Gut Knife"
@@ -467,6 +468,12 @@ if LocalPlayer then
 		elseif string.find(wpid,"csgo_karambit")!=nil then wpcode = "0"  wpdisp = "Karambit Knife"
 		elseif string.find(wpid,"csgo_m9")!=nil then wpcode = "0"  wpdisp = "M9 Bayonet Knife"
 		elseif string.find(wpid,"csgo_daggers")!=nil then wpcode = "0"  wpdisp = "Shadow Daggers"
+		elseif string.find(wpid,"ak47")!=nil 
+		or string.find(wpid,"ak74")!=nil 
+		or string.find(wpid,"an94")!=nil then wpcode = "1"  wpdisp = wpname
+		elseif string.find(wpid,"glock")!=nil
+		or string.find(wpid,"m9k_hk45")!=nil
+		or string.find(wpid,"colt1911")!=nil  then wpcode = "4"  wpdisp = wpname
 		else
 			wpcode="0"
 			wpdisp=wpname
@@ -499,14 +506,6 @@ if LocalPlayer then
 
 		xx = ScrW()
 
-		if wpcode=="0" then
-			WeaponNameInfo.pos = {xx-95,yy-67}
-			AmmoInfo.pos = {xx-90,yy-34}
-		else
-			WeaponNameInfo.pos = {xx-200,yy-67}
-			AmmoInfo.pos = {xx-200,yy-34}
-		end
-
 
 		local ammo1 = wp:Clip1()
 		local ammo1type = wp:GetPrimaryAmmoType()
@@ -522,6 +521,20 @@ if LocalPlayer then
 		local ammoleng = string.len(ammo1) + string.len(ammo1invt) + 1
 		local ammoaddi = ammoleng - 5
 		local ammolengaddi = 60 * ammoaddi
+
+		if wpcode=="0" then
+			WeaponNameInfo.pos = {xx-95,yy-67}
+			AmmoInfo.pos = {xx-90,yy-34}
+		elseif wpcode=="4" then
+			WeaponNameInfo.pos = {xx-140,yy-67}
+			AmmoInfo.pos = {xx-140,yy-34}
+		else
+			WeaponNameInfo.pos = {xx-200,yy-67}
+			AmmoInfo.pos = {xx-200,yy-34}
+		end
+
+
+		
 
 		if ammo1type!=-1 then
 			
@@ -610,6 +623,29 @@ if LocalPlayer then
 
 		xx = ScrW()-ShapeWidth-10
 		CyberpunkUIShape(xx, yy, BGColor, AmmoGlobalColor, ShapeWidth, 80, EleShape+2, 2, "weapon")
+
+
+		-------- STYLE ----------------------
+		local wpstyle = string.sub(wpname, string.len(wpdisp)+4 )
+
+		local StyleInfo = {
+			['text'] = "Weapon Style:  "..wpstyle,
+			['font'] = "OrbitMed",
+			['pos'] = {xx-5,yy-105},
+			['xalign'] = TEXT_ALIGN_LEFT,
+			['yalign'] = TEXT_ALIGN_CENTER,
+			['color'] = AmmoGlobalColor
+		}
+
+
+
+		if string.StartWith(wpid, "csgo_") and wpstyle != "" then 
+			CyberpunkUIShape(xx-15, yy-84, BGColor, AmmoGlobalColor, ShapeWidth, 40, 1, 2, "wpstyle")
+			draw.Text(StyleInfo)
+		else
+			hook.Remove("HUDPaint", "wpstyle")
+		end
+
 
 		render.SetScissorRect( 0, 0, 0, 0, false )
 		
