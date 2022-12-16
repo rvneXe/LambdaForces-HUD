@@ -85,10 +85,17 @@ if LocalPlayer then
 		outline = false,
 	} )
 
+	-- Menu Variables
+	local accentr = CreateClientConVar( "lfh_accent_color_r", 0, true, false, "LambdaForces HUD Accent Color (R)", 0, 255 )
+	local accentg = CreateClientConVar( "lfh_accent_color_g", 255, true, false, "LambdaForces HUD Accent Color (G)", 0, 255 )
+	local accentb = CreateClientConVar( "lfh_accent_color_b", 255, true, false, "LambdaForces HUD Accent Color (B)", 0, 255 )
+	local accenta = CreateClientConVar( "lfh_accent_color_a", 255, true, false, "LambdaForces HUD Accent Color (A)", 0, 255 )
+	local shape_ele = CreateClientConVar( "lfh_shape_el", "-16", true, false, "LambdaForces HUD Elements Shape\n-16 = Parallelogram\n-1 = Rectangle")
+
 
 	-- Add HUD Colors
 	local BGColor = Color(10,10,10,229)
-	local AccentColor = Color(0,225,225,255)
+	local AccentColor = Color(accentr:GetInt(),accentg:GetInt(),accentb:GetInt(),255)
 	local DisabledColor = Color(128,128,128,225)
 	local Warning = Color(255,156,0,255)
 	local EmptyMag = Color(255,0,0,255)
@@ -97,6 +104,7 @@ if LocalPlayer then
 	local ArmorDecrease = Color(225,10,10,225)
 	local HealingColor = Color(88,255,205,225)
 
+	-- print(AccentColor)
 	
 	-- Define some variables to fit the HUD better in screen space
 	local ScreenVars = {
@@ -176,19 +184,18 @@ if LocalPlayer then
 			['color'] = HealthColor
 		}
 
-
+		AccentColor = Color(accentr:GetInt(), accentg:GetInt(), accentb:GetInt(), 255)
 
 		if !ShouldDraw() then 
 			return 
 		end
 		
 		local w,h = ScrW(), ScrH()
-		
 		local xx, yy
-		
 		local iconx,icony
-		
 		local textx,texty = 19,16
+
+		local EleShape = shape_ele:GetInt()
 		
 		function CyberpunkUIShape( leftx, downy, fillcolor, linecolor, wid, hei, bendsize, offset, identifier )
 			local shapebg = {
@@ -307,7 +314,7 @@ if LocalPlayer then
 		surface.SetDrawColor(HealthColor)
 		
 		surface.DrawRect( xx+14, yy-12, 180*healthpercent,4 )
-		CyberpunkUIShape(xx, yy, BGColor, HealthColor, 204, 80, 16, 2, "health")
+		CyberpunkUIShape(xx, yy, BGColor, HealthColor, 204, 80, -EleShape, 2, "health")
 
 
 		---\/------------------------------\/--
@@ -326,12 +333,8 @@ if LocalPlayer then
 			local ArmorGlobalColor
 
 			if myplayer:Armor()!=0 then
-				-- print("YES")
-
 				ArmorGlobalColor = ArmorColor
 			elseif myplayer:Armor()==0 then
-				-- print("NO")
-				
 				ArmorGlobalColor = DisabledColor
 			end
 		
@@ -415,7 +418,7 @@ if LocalPlayer then
 			surface.SetDrawColor(ArmorColor)
 
 			surface.DrawRect(xx+223, yy-12, 180*armorpercent,4 )
-			CyberpunkUIShape(xx+209, yy, BGColor, ArmorGlobalColor, 204, 80, 16, 2, "armor")
+			CyberpunkUIShape(xx+209, yy, BGColor, ArmorGlobalColor, 204, 80, -EleShape, 2, "armor")
 		
 		else
 			hook.Remove("HUDPaint", "armor")
@@ -518,7 +521,7 @@ if LocalPlayer then
 
 		local ammoleng = string.len(ammo1) + string.len(ammo1invt) + 1
 		local ammoaddi = ammoleng - 5
-		local ammolengaddi = 55 * ammoaddi
+		local ammolengaddi = 60 * ammoaddi
 
 		if ammo1type!=-1 then
 			
@@ -576,13 +579,11 @@ if LocalPlayer then
 			end
 		end
 
-		-- print(ammo1type)
-		-- print(ammo2type)
 
 		
 		---- SECOND AMMO ------------------
-		WeaponNameInfo.pos = {xx+380,yy-150}
-		AmmoInfo.pos = {xx+370,yy-117}
+		WeaponNameInfo.pos = {xx-40,yy-150}
+		AmmoInfo.pos = {xx-40,yy-117}
 		if ammo2type!=-1 then
 			if ammo2invt != 0 and ammo2type!=11 then
 				if ammo2invt > 99 then 
@@ -599,7 +600,7 @@ if LocalPlayer then
 
 				draw.Text(WeaponNameInfo)
 				draw.Text(AmmoInfo)
-				CyberpunkUIShape(xx-17+200, yy-85, BGColor, AmmoGlobalColor, 200, 80, 16, 2, "clip2")
+				CyberpunkUIShape(xx-212, yy-85, BGColor, AmmoGlobalColor, 200, 80, EleShape+2, 2, "clip2")
 			else
 				hook.Remove("HUDPaint", "clip2")
 			end
@@ -608,9 +609,7 @@ if LocalPlayer then
 		end
 
 		xx = ScrW()-ShapeWidth-10
-		CyberpunkUIShape(xx, yy, BGColor, AmmoGlobalColor, ShapeWidth, 80, -16, 2, "weapon")
-		
-		print(xx, ScrW())
+		CyberpunkUIShape(xx, yy, BGColor, AmmoGlobalColor, ShapeWidth, 80, EleShape+2, 2, "weapon")
 
 		render.SetScissorRect( 0, 0, 0, 0, false )
 		
@@ -618,6 +617,26 @@ if LocalPlayer then
 	
 	hook.Add( 'HUDPaint', 'zDrawHUD', DrawTheHUD )
 	hook.Add( 'HUDShouldDraw', 'HideHUD', HideHUD )
+
+	local function CusElMenu( Panel )
+		Panel:ClearControls()
+		Panel:AddControl( "Color", {
+			Label = "Lines Color",
+			Red = "lfh_accent_color_r",
+			Green = "lfh_accent_color_g",
+			Blue = "lfh_accent_color_b",
+			Alpha = "lfh_accent_color_a"
+			} )
+
+		local elembox, label = Panel:ComboBox("Shape:", "lfh_shape_el")
+		elembox:AddChoice("Parallelogram (default)", "-16")
+		elembox:AddChoice("Rectangle", "-1")
+	end
+	
+	local function CreateMenus()
+		spawnmenu.AddToolMenuOption( "Options", "LambdaForces", "lfh_cus_el", "Elements Customize", "", "",CusElMenu )
+	end
+	hook.Add( "PopulateToolMenu", "lfhud", CreateMenus )
 
 end
 
