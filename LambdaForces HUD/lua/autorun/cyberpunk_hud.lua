@@ -468,12 +468,12 @@ if LocalPlayer then
 		elseif string.find(wpid,"csgo_karambit")!=nil then wpcode = "0"  wpdisp = "Karambit Knife"
 		elseif string.find(wpid,"csgo_m9")!=nil then wpcode = "0"  wpdisp = "M9 Bayonet Knife"
 		elseif string.find(wpid,"csgo_daggers")!=nil then wpcode = "0"  wpdisp = "Shadow Daggers"
-		elseif string.find(wpid,"ak47")!=nil 
-		or string.find(wpid,"ak74")!=nil 
-		or string.find(wpid,"an94")!=nil then wpcode = "1"  wpdisp = wpname
-		elseif string.find(wpid,"glock")!=nil
-		or string.find(wpid,"m9k_hk45")!=nil
-		or string.find(wpid,"colt1911")!=nil  then wpcode = "4"  wpdisp = wpname
+		--elseif string.find(wpid,"ak47")!=nil 
+		--or string.find(wpid,"ak74")!=nil 
+		--or string.find(wpid,"an94")!=nil then wpcode = "1"  wpdisp = wpname
+		--elseif string.find(wpid,"glock")!=nil
+		--or string.find(wpid,"m9k_hk45")!=nil
+		--or string.find(wpid,"colt1911")!=nil  then wpcode = "4"  wpdisp = wpname
 		else
 			wpcode="0"
 			wpdisp=wpname
