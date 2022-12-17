@@ -185,6 +185,8 @@ if LocalPlayer then
 		}
 
 		AccentColor = Color(accentr:GetInt(), accentg:GetInt(), accentb:GetInt(), 255)
+		BGColor = Color(10,10,10,accenta:GetInt())
+
 
 		if !ShouldDraw() then 
 			return 
@@ -194,7 +196,6 @@ if LocalPlayer then
 		local xx, yy
 		local iconx,icony
 		local textx,texty = 19,16
-
 		local EleShape = shape_ele:GetInt()
 		
 		function CyberpunkUIShape( leftx, downy, fillcolor, linecolor, wid, hei, bendsize, offset, identifier )
@@ -206,7 +207,8 @@ if LocalPlayer then
 			}
 			
 			local function DrawIt()
- 
+				
+				
 				surface.SetDrawColor(fillcolor)
 				surface.DrawPoly( shapebg )
 			 
