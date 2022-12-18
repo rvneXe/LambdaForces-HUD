@@ -456,7 +456,7 @@ if LocalPlayer then
 		elseif wpid=="weapon_stunstick" then wpcode = "n"   wpdisp = "Stunstick"
 		elseif wpid=="weapon_frag"    then wpcode = "k"  wpdisp = "Frag Grenade"
 		elseif wpid=="weapon_slam"	  then wpcode = "0"  wpdisp = "S.L.A.M"
-		elseif wpid=="weapon_medkit"  then wpcode = "+"
+		-- elseif wpid=="weapon_medkit"  then wpcode = "+" wpdisp = "Medkit"
 		elseif string.find(wpid,"csgo_bayonet")!=nil then wpcode = "0"  wpdisp = "Bayonet Knife"
 		elseif string.find(wpid,"csgo_bowie")!=nil then wpcode = "0"  wpdisp = "Bowie Knife"
 		elseif string.find(wpid,"csgo_butterfly")!=nil then wpcode = "0"  wpdisp = "Butterfly Knife"
