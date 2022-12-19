@@ -104,7 +104,7 @@ if LocalPlayer then
 	local ArmorDecrease = Color(225,10,10,225)
 	local HealingColor = Color(88,255,205,225)
 
-	-- print(AccentColor)
+	--print(AccentColor)
 	
 	-- Define some variables to fit the HUD better in screen space
 	local ScreenVars = {
@@ -120,6 +120,7 @@ if LocalPlayer then
 	local FadeSpeed = 300
 
 	local OldHealth = 100
+	local OldAUX = 100
 
 	local OldArmor = 0
 
@@ -128,7 +129,8 @@ if LocalPlayer then
 		['CHudHealth']=true,
 		['CHudBattery']=true,
 		['CHudAmmo']=true,
-		['CHudSecondaryAmmo']=true
+		['CHudSecondaryAmmo']=true,
+		['CHudSuitPower']=true
 	}
 
 
@@ -151,7 +153,6 @@ if LocalPlayer then
 	}
 	local ArmorNumInfo = {
 		['text'] = nil,
-		['font'] = nil,
 		['font'] = "Numbers",
 		['pos'] = {0,0},
 		['xalign'] = TEXT_ALIGN_LEFT,
@@ -166,12 +167,13 @@ if LocalPlayer then
 		['yalign'] = TEXT_ALIGN_CENTER,
 		['color'] = nil
 	}
+	local AUXInfo = {
 		['text'] = nil,
-		['font'] = nil,
+		['font'] = "OrbitMed",
 		['pos'] = {0,0},
 		['xalign'] = TEXT_ALIGN_LEFT,
 		['yalign'] = TEXT_ALIGN_CENTER,
-		['color'] = AccentColor
+		['color'] = nil
 	}
 	
 	local function ShouldDraw()
@@ -377,10 +379,64 @@ if LocalPlayer then
 
 
 		---\/------------------------------\/--
+		---     AUX POWER
+		---\/------------------------------\/--
+		local AUXVarTable = {
+			['text'] = "A",
+			['font'] = "Numbers",
+			['pos'] = {3,3},
+			['xalign'] = TEXT_ALIGN_LEFT,
+			['yalign'] = TEXT_ALIGN_CENTER,
+			['color'] = HealthColor
+		}
+
+		if SuitEnabled == 1 and myplayer:IsSuitEquipped() == true and HUDSuitEnabled == 1 then
+			--print(myplayer:GetSuitPower())
+			--print(myplayer:FlashlightIsOn())
+			--print(myplayer:IsSprinting())
+			--print(myplayer:WaterLevel())
+
+			local AUXColor = Color(AccentColor.r, AccentColor.g, AccentColor.b, 255)
+			local AUXBGColor = Color(BGColor.r, BGColor.g, BGColor.b, accenta:GetInt())
+			local auxpercent = myplayer:GetSuitPower() / 100
+
+			if auxpercent == 0 then
+				AUXColor = Color(255,0,0)
+			end
+
+			if myplayer:GetSuitPower()>OldAUX then
+				for k,v in pairs(ArmorRecharge) do
+					AUXColor[k]=v
+				end	
+			end
+
+			if myplayer:GetSuitPower() == 100 then
+				AUXColor = Color(0,0,0,0)
+				AUXBGColor = Color(0,0,0,0)
+			end
+			
+			if myplayer:GetSuitPower()>OldAUX then AUXColor = ArmorRecharge end
+
+			OldAUX = myplayer:GetSuitPower()
+
+			CyberpunkUIShape(xx-xx+47, yy-84, AUXBGColor, AUXColor, 204, 40, 1, 2, "power")
+
+			AUXInfo.pos = {xx+35,yy-110}
+			AUXInfo.color = AUXColor
+			AUXInfo.text = "AUX Power"
+			draw.Text( AUXInfo )
+
+			surface.SetDrawColor(AUXColor)
+			surface.DrawRect(xx-xx+61, yy-96, 180*auxpercent,4 )
+		end	
+
+		xx = ScrW() -- to sync positions with resolution
+
+
+		---\/------------------------------\/--
 		---     Weapon & Ammo
 		---\/------------------------------\/--
-
-		local AmmoGlobalColor = Color(255,255,255,255)
+		local AmmoGlobalColor = AccentColor
 		local ShapeWidth
 		local wp = myplayer:GetActiveWeapon()
 		local wpid = wp:GetClass()
