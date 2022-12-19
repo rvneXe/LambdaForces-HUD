@@ -10,6 +10,14 @@ if SERVER then
 	AddCSLuaFile()
 end
 
+local accentr = CreateClientConVar( "lfh_accent_color_r", 0, true, false, "LambdaForces HUD Accent Color (R)", 0, 255 )
+local accentg = CreateClientConVar( "lfh_accent_color_g", 255, true, false, "LambdaForces HUD Accent Color (G)", 0, 255 )
+local accentb = CreateClientConVar( "lfh_accent_color_b", 255, true, false, "LambdaForces HUD Accent Color (B)", 0, 255 )
+local accenta = CreateClientConVar( "lfh_accent_color_a", 230, true, false, "LambdaForces HUD BG Opacity", 0, 255 )
+local playerwantsaux = CreateClientConVar( "lfh_enable_aux", 1, true, false, "Should HUD Display H.E.V Suit Power?", 0, 1 )
+local shape_ele = CreateClientConVar( "lfh_shape_el", "-16", true, false, "LambdaForces HUD Elements Shape\n-16 = Parallelogram\n-1 = Rectangle")
+local gmodsuit = GetConVar("gmod_suit")
+
 if LocalPlayer then
 
 	-- Add Typefaces for HUD
@@ -85,17 +93,9 @@ if LocalPlayer then
 		outline = false,
 	} )
 
-	-- Menu Variables
-	local accentr = CreateClientConVar( "lfh_accent_color_r", 0, true, false, "LambdaForces HUD Accent Color (R)", 0, 255 )
-	local accentg = CreateClientConVar( "lfh_accent_color_g", 255, true, false, "LambdaForces HUD Accent Color (G)", 0, 255 )
-	local accentb = CreateClientConVar( "lfh_accent_color_b", 255, true, false, "LambdaForces HUD Accent Color (B)", 0, 255 )
-	local accenta = CreateClientConVar( "lfh_accent_color_a", 255, true, false, "LambdaForces HUD Accent Color (A)", 0, 255 )
-	local shape_ele = CreateClientConVar( "lfh_shape_el", "-16", true, false, "LambdaForces HUD Elements Shape\n-16 = Parallelogram\n-1 = Rectangle")
-
-
 	-- Add HUD Colors
 	local BGColor = Color(10,10,10,229)
-	local AccentColor = Color(accentr:GetInt(),accentg:GetInt(),accentb:GetInt(),255)
+	local AccentColor = Color(0, 255, 255,255)
 	local DisabledColor = Color(128,128,128,225)
 	local Warning = Color(255,156,0,255)
 	local EmptyMag = Color(255,0,0,255)
@@ -131,17 +131,41 @@ if LocalPlayer then
 		['CHudSecondaryAmmo']=true
 	}
 
+
 	-- Define Some information for drawing HP & Armor Icons
+	local HealthNumInfo = {
+		['text'] = nil,
+		['font'] = "Numbers",
+		['pos'] = {125,-55},
+		['xalign'] = TEXT_ALIGN_CENTER,
+		['yalign'] = TEXT_ALIGN_CENTER,
+		['color'] = nil
+	}
 	local HealthIconInfo = {
+		['text'] = "A",
+		['font'] = "Numbers",
+		['pos'] = {3,3},
+		['xalign'] = TEXT_ALIGN_LEFT,
+		['yalign'] = TEXT_ALIGN_CENTER,
+		['color'] = nil
+	}
+	local ArmorNumInfo = {
 		['text'] = nil,
 		['font'] = nil,
+		['font'] = "Numbers",
 		['pos'] = {0,0},
 		['xalign'] = TEXT_ALIGN_LEFT,
 		['yalign'] = TEXT_ALIGN_CENTER,
-		['color'] = AccentColor
+		['color'] = nil
 	}
-
 	local ArmorIconInfo = {
+		['text'] = "B",
+		['font'] = "Numbers",
+		['pos'] = {0,0},
+		['xalign'] = TEXT_ALIGN_CENTER,
+		['yalign'] = TEXT_ALIGN_CENTER,
+		['color'] = nil
+	}
 		['text'] = nil,
 		['font'] = nil,
 		['pos'] = {0,0},
@@ -150,9 +174,6 @@ if LocalPlayer then
 		['color'] = AccentColor
 	}
 	
-	
-
-
 	local function ShouldDraw()
 		local myplayer = LocalPlayer()
 		if !IsValid(myplayer) then 
@@ -170,112 +191,57 @@ if LocalPlayer then
 		end
 	end
 
+	local w,h = ScrW(), ScrH()
+	local xx, yy
+
+	function CyberpunkUIShape( leftx, downy, fillcolor, linecolor, wid, hei, bendsize, offset, identifier )
+		local shapebg = {
+			{ x = leftx+bendsize, y = downy-hei }, -- top left
+			{ x = leftx , y = downy }, -- down left
+			{ x = leftx+wid, y = downy }, -- down right
+			{ x = leftx+wid+bendsize, y = downy-hei } -- top right
+		}
+
+		surface.SetDrawColor(fillcolor)
+		surface.DrawPoly( shapebg )
+		 
+		surface.SetDrawColor(linecolor)
+		surface.DrawLine(leftx+bendsize+offset, downy-hei+offset, leftx+wid+bendsize-offset-2, downy-hei+offset) -- top
+		surface.DrawLine(leftx+offset+1, downy-offset-1, leftx+wid-offset, downy-offset-1) -- down
+		surface.DrawLine(leftx+bendsize+offset, downy-hei+offset, leftx+offset+1, downy-offset) -- left
+		surface.DrawLine(leftx+wid+bendsize-offset-2, downy-hei+offset, leftx+wid-offset-1, downy-offset)
+	end
 
 	local function DrawTheHUD()
 
-		local myplayer = LocalPlayer()
+		if !ShouldDraw() then return end
 
-		local HealthIconTable = {
-			['text'] = "A",
-			['font'] = "Numbers",
-			['pos'] = {3,3},
-			['xalign'] = TEXT_ALIGN_LEFT,
-			['yalign'] = TEXT_ALIGN_CENTER,
-			['color'] = HealthColor
-		}
+		local myplayer = LocalPlayer()
 
 		AccentColor = Color(accentr:GetInt(), accentg:GetInt(), accentb:GetInt(), 255)
 		BGColor = Color(10,10,10,accenta:GetInt())
-
-
-		if !ShouldDraw() then 
-			return 
-		end
 		
-		local w,h = ScrW(), ScrH()
-		local xx, yy
-		local iconx,icony
-		local textx,texty = 19,16
 		local EleShape = shape_ele:GetInt()
+		local SuitEnabled = gmodsuit:GetInt()
+		local HUDSuitEnabled = playerwantsaux:GetInt()
 		
-		function CyberpunkUIShape( leftx, downy, fillcolor, linecolor, wid, hei, bendsize, offset, identifier )
-			local shapebg = {
-				{ x = leftx+bendsize, y = downy-hei }, -- top left
-				{ x = leftx , y = downy }, -- down left
-				{ x = leftx+wid, y = downy }, -- down right
-				{ x = leftx+wid+bendsize, y = downy-hei } -- top right
-			}
-			
-			local function DrawIt()
-				
-				
-				surface.SetDrawColor(fillcolor)
-				surface.DrawPoly( shapebg )
-			 
-				
-				surface.SetDrawColor(linecolor)
-				surface.DrawLine(leftx+bendsize+offset, downy-hei+offset, leftx+wid+bendsize-offset-2, downy-hei+offset) -- top
-				surface.DrawLine(leftx+offset+1, downy-offset-1, leftx+wid-offset, downy-offset-1) -- down
-				surface.DrawLine(leftx+bendsize+offset, downy-hei+offset, leftx+offset+1, downy-offset) -- left
-				surface.DrawLine(leftx+wid+bendsize-offset-2, downy-hei+offset, leftx+wid-offset-1, downy-offset)
-			end
-			hook.Add("HUDPaint", identifier , DrawIt)
-		end
-
 		xx=w*ScreenVars.x
 		yy=h-h*(ScreenVars.y)
 		
 
-		--draw.RoundedBox(0,0,yy,w,1,color_white)
-		
-		--Health	
-
-		yy=yy+5
-		
-		surface.SetDrawColor(BGColor)
-		
-		HealthIconInfo.pos = {xx+1,yy+9}
-		
-		HealthIconInfo.text =  ""
-		
-		HealthIconInfo.font =  "Numbers"
-		
-		HealthIconInfo.xalign = TEXT_ALIGN_LEFT
-		HealthIconInfo.yalign = TEXT_ALIGN_CENTER
-		
-
+		---\/------------------------------\/--
+		---     Health
+		---\/------------------------------\/--
 		if myplayer:Health()<1 then
+			HealthNumInfo.color = DisabledColor
 			HealthIconInfo.color = DisabledColor
-			HealthIconTable.color = DisabledColor
 		else
+			HealthNumInfo.color = AccentColor
 			HealthIconInfo.color = AccentColor
-			HealthIconTable.color = AccentColor
 		end
 
-		local healthpercentforbar = math.Clamp( myplayer:Health() / math.max( myplayer:GetMaxHealth(), 1 ), 0, 1)*165
-
-		HealthIconTable.pos = {xx+5,yy-45}
-
-		HealthIconTable.color = HealthColor
-		HealthIconInfo.color = HealthColor
-		draw.Text( HealthIconTable )
-		
-		HealthIconInfo.pos[1] = HealthIconInfo.pos[1]+125
-		
-		HealthIconInfo.pos[2] = HealthIconInfo.pos[2]-55
-		
-		HealthIconInfo.xalign = TEXT_ALIGN_CENTER
-		HealthIconInfo.yalign = TEXT_ALIGN_CENTER
-		
-		HealthIconInfo.text =  tostring(math.ceil(myplayer:Health()))
-		
-		HealthIconInfo.text = string.sub(HealthIconInfo.text,1,math.min(string.len(HealthIconInfo.text),3))
-		
-		HealthIconInfo.font =  "Numbers"
-		
-		iconx,icony = draw.Text( HealthIconInfo )
-
-		local healthpercent = math.Clamp( myplayer:Health() / math.max( myplayer:GetMaxHealth(), 1 ), 0, 1)
+		local healthpercent = myplayer:Health() / myplayer:GetMaxHealth()
+		if healthpercent > 1 then healthpercent = 1 end
 		
 		if HealthColor.r>AccentColor.r then
 			HealthColor.r = math.Clamp(math.max(HealthColor.r-FrameTime()*FadeSpeed,AccentColor.r),0,255)
@@ -312,44 +278,37 @@ if LocalPlayer then
 		end
 		
 		OldHealth = myplayer:Health()
+
+		CyberpunkUIShape(xx, yy, BGColor, HealthColor, 200, 80, -EleShape, 2, "health")
+
+		
+		HealthIconInfo.pos = {xx+5,yy-45}
+		HealthIconInfo.color = HealthColor
+		draw.Text( HealthIconInfo )
+		
+		HealthNumInfo.pos = {xx+125,yy-45}
+		HealthNumInfo.color = HealthColor
+		HealthNumInfo.text =  myplayer:Health()
+		draw.Text( HealthNumInfo )
 		
 		surface.SetDrawColor(HealthColor)
+		surface.DrawRect( xx+14, yy-12, 175*healthpercent,4 )
 		
-		surface.DrawRect( xx+14, yy-12, 180*healthpercent,4 )
-		CyberpunkUIShape(xx, yy, BGColor, HealthColor, 204, 80, -EleShape, 2, "health")
 
 
 		---\/------------------------------\/--
 		---     Armor
 		---\/------------------------------\/--
-		
-		yy = yy
-		
-		-- DrawBlurRect( xx, yy, w/7, 25, 2, 2 )
-		
-		-- surface.SetDrawColor(BGColor)
-		-- surface.DrawRect( xx, yy, w/7,24 ,25 )
-
 		if myplayer:Armor()!=0 then
-			
 			local ArmorGlobalColor
 
 			if myplayer:Armor()!=0 then
 				ArmorGlobalColor = ArmorColor
-			elseif myplayer:Armor()==0 then
-				ArmorGlobalColor = DisabledColor
 			end
 		
 			ArmorIconInfo.color = ArmorGlobalColor
-		
 			ArmorIconInfo.pos = {xx+210,yy-39}
-		
 			ArmorIconInfo.text = 'B'
-		
-			ArmorIconInfo.font =  "Numbers"
-		
-			ArmorIconInfo.xalign = TEXT_ALIGN_LEFT
-			ArmorIconInfo.yalign = TEXT_ALIGN_CENTER
 		
 			if myplayer:Armor()==0 then
 				ArmorColor = DisabledColor
@@ -359,24 +318,6 @@ if LocalPlayer then
 				ArmorIconInfo.color = AccentColor
 				ArmorIconInfo.color = AccentColor
 			end
-		
-			ArmorIconInfo.color = ArmorGlobalColor
-			draw.Text( ArmorIconInfo )
-		
-			ArmorIconInfo.pos[1] = ArmorIconInfo.pos[1]+125
-		
-			ArmorIconInfo.pos[2] = ArmorIconInfo.pos[2]-7
-		
-			ArmorIconInfo.xalign = TEXT_ALIGN_CENTER
-			ArmorIconInfo.yalign = TEXT_ALIGN_CENTER
-		
-			ArmorIconInfo.text =  tostring(math.ceil(myplayer:Armor()))
-		
-			ArmorIconInfo.text = string.sub(ArmorIconInfo.text,1,math.min(string.len(ArmorIconInfo.text),3))
-			
-			ArmorIconInfo.font =  "Numbers"
-		
-			iconx,icony = draw.Text( ArmorIconInfo )
 
 			local armorpercent = math.Clamp( myplayer:Armor() / 100, 0, 1)
 		
@@ -416,14 +357,22 @@ if LocalPlayer then
 			end
 		
 			OldArmor = myplayer:Armor()
-		
-			surface.SetDrawColor(ArmorColor)
+			
+			CyberpunkUIShape(xx+210, yy, BGColor, ArmorGlobalColor, 204, 80, -EleShape, 2, "armor")
 
+			ArmorNumInfo.pos = {xx+270,yy-45}
+			ArmorNumInfo.color = ArmorGlobalColor
+			ArmorNumInfo.text = myplayer:Armor()
+			draw.Text( ArmorNumInfo )
+
+			ArmorIconInfo.pos = {xx+240,yy-45}
+			ArmorIconInfo.color = ArmorGlobalColor
+			draw.Text( ArmorIconInfo )
+			
+			surface.SetDrawColor(ArmorColor)
 			surface.DrawRect(xx+223, yy-12, 180*armorpercent,4 )
-			CyberpunkUIShape(xx+209, yy, BGColor, ArmorGlobalColor, 204, 80, -EleShape, 2, "armor")
+			
 		
-		else
-			hook.Remove("HUDPaint", "armor")
 		end
 
 
@@ -438,9 +387,6 @@ if LocalPlayer then
 		local wpname = wp:GetPrintName() 
 		local wpdisp
 		local wpcode
-
-
-		local a2code
 
 		if wpid=="weapon_smg1" then wpcode = "a"   wpdisp = "SMG"
 		elseif wpid=="weapon_shotgun" then wpcode = "b"  wpdisp = "Shotgun"
@@ -506,7 +452,6 @@ if LocalPlayer then
 			['color'] = AmmoGlobalColor
 		}
 
-		xx = ScrW()
 
 
 		local ammo1 = wp:Clip1()
@@ -548,9 +493,9 @@ if LocalPlayer then
 					ShapeLeftX = ShapeLeftX + 85
 				end
 			end
+
 			if ammo1percentage >= 25 then
 				AmmoGlobalColor = AccentColor
-
 			elseif ammo1percentage < 25 then
 				AmmoGlobalColor = Warning
 
@@ -574,7 +519,8 @@ if LocalPlayer then
 		end
 
 		WeaponIconInfo.color = AmmoGlobalColor
-		
+
+		CyberpunkUIShape(xx-ShapeWidth-10, yy, BGColor, AmmoGlobalColor, ShapeWidth, 80, EleShape+2, 2, "weapon")
 		draw.Text(WeaponNameInfo)
 		draw.Text(WeaponIconInfo)
 		
@@ -594,7 +540,6 @@ if LocalPlayer then
 			end
 		end
 
-
 		
 		---- SECOND AMMO ------------------
 		WeaponNameInfo.pos = {xx-40,yy-150}
@@ -613,9 +558,9 @@ if LocalPlayer then
 					WeaponNameInfo.text = "[UNKNOWN]"
 				end
 
+				CyberpunkUIShape(xx-212, yy-85, BGColor, AmmoGlobalColor, 200, 80, EleShape+2, 2, "clip2")
 				draw.Text(WeaponNameInfo)
 				draw.Text(AmmoInfo)
-				CyberpunkUIShape(xx-212, yy-85, BGColor, AmmoGlobalColor, 200, 80, EleShape+2, 2, "clip2")
 			else
 				hook.Remove("HUDPaint", "clip2")
 			end
@@ -624,7 +569,7 @@ if LocalPlayer then
 		end
 
 		xx = ScrW()-ShapeWidth-10
-		CyberpunkUIShape(xx, yy, BGColor, AmmoGlobalColor, ShapeWidth, 80, EleShape+2, 2, "weapon")
+		
 
 
 		-------- STYLE ----------------------
@@ -647,7 +592,6 @@ if LocalPlayer then
 		else
 			hook.Remove("HUDPaint", "wpstyle")
 		end
-
 
 		render.SetScissorRect( 0, 0, 0, 0, false )
 		
@@ -677,6 +621,3 @@ if LocalPlayer then
 	hook.Add( "PopulateToolMenu", "lfhud", CreateMenus )
 
 end
-
-
-
