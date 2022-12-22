@@ -405,9 +405,7 @@ if LocalPlayer then
 			end
 
 			if myplayer:GetSuitPower()>OldAUX then
-				for k,v in pairs(ArmorRecharge) do
-					AUXColor[k]=v
-				end	
+				AUXColor = ArmorRecharge
 			end
 
 			if myplayer:GetSuitPower() == 100 then
