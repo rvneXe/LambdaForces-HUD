@@ -155,7 +155,7 @@ if LocalPlayer then
 		['text'] = nil,
 		['font'] = "Numbers",
 		['pos'] = {0,0},
-		['xalign'] = TEXT_ALIGN_LEFT,
+		['xalign'] = TEXT_ALIGN_CENTER,
 		['yalign'] = TEXT_ALIGN_CENTER,
 		['color'] = nil
 	}
@@ -362,7 +362,7 @@ if LocalPlayer then
 			
 			CyberpunkUIShape(xx+210, yy, BGColor, ArmorGlobalColor, 204, 80, -EleShape, 2, "armor")
 
-			ArmorNumInfo.pos = {xx+270,yy-45}
+			ArmorNumInfo.pos = {xx+335,yy-45}
 			ArmorNumInfo.color = ArmorGlobalColor
 			ArmorNumInfo.text = myplayer:Armor()
 			draw.Text( ArmorNumInfo )
