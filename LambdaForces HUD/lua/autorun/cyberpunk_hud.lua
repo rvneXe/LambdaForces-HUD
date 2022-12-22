@@ -445,6 +445,7 @@ if LocalPlayer then
 		local wpdisp
 		local wpcode
 
+		--⨌***** Half-Life/Gmod weapons
 		if wpid=="weapon_smg1" then wpcode = "a"   wpdisp = "SMG"
 		elseif wpid=="weapon_shotgun" then wpcode = "b"  wpdisp = "Shotgun"
 		elseif wpid=="weapon_crowbar" then wpcode = "c"  wpdisp = "Crowbar"
@@ -460,12 +461,22 @@ if LocalPlayer then
 		elseif wpid=="weapon_frag"    then wpcode = "k"  wpdisp = "Frag Grenade"
 		elseif wpid=="weapon_slam"	  then wpcode = "0"  wpdisp = "S.L.A.M"
 		-- elseif wpid=="weapon_medkit"  then wpcode = "+" wpdisp = "Medkit"
+		
+		--⨌***** ICONS for addons
+		--elseif string.find(wpid,"ak47")!=nil 
+		--or string.find(wpid,"ak74")!=nil 
+		--or string.find(wpid,"an94")!=nil then wpcode = "1"  wpdisp = wpname
+		--elseif string.find(wpid,"glock")!=nil
+		--or string.find(wpid,"m9k_hk45")!=nil
+		--or string.find(wpid,"colt1911")!=nil  then wpcode = "4"  wpdisp = wpname
+		--elseif string.find(wpid,"csgo_default_t")!=nil then wpcode = "3"  wpdisp = "Default T Knife"
+		--elseif string.find(wpid,"csgo_default")!=nil or string.find(wpid,"csgo_knife_t")!=nil then wpcode = "3"  wpdisp = "Default T Knife"
+		--elseif string.find(wpid,"csgo_knife")!=nil then wpcode = "2"  wpdisp = "Default CT Knife"
+
+		--⨌***** NAMES for addons
 		elseif string.find(wpid,"csgo_bayonet")!=nil then wpcode = "0"  wpdisp = "Bayonet Knife"
 		elseif string.find(wpid,"csgo_bowie")!=nil then wpcode = "0"  wpdisp = "Bowie Knife"
 		elseif string.find(wpid,"csgo_butterfly")!=nil then wpcode = "0"  wpdisp = "Butterfly Knife"
-		elseif string.find(wpid,"csgo_default_t")!=nil then wpcode = "3"  wpdisp = "Default T Knife"
-		elseif string.find(wpid,"csgo_default")!=nil or string.find(wpid,"csgo_knife_t")!=nil then wpcode = "3"  wpdisp = "Default T Knife"
-		elseif string.find(wpid,"csgo_knife")!=nil then wpcode = "2"  wpdisp = "Default CT Knife"
 		elseif string.find(wpid,"csgo_falchion")!=nil then wpcode = "0"  wpdisp = "Falchion Knife"
 		elseif string.find(wpid,"csgo_flip")!=nil then wpcode = "0"  wpdisp = "Flip Knife"
 		elseif string.find(wpid,"csgo_gut")!=nil then wpcode = "0"  wpdisp = "Gut Knife"
@@ -473,12 +484,8 @@ if LocalPlayer then
 		elseif string.find(wpid,"csgo_karambit")!=nil then wpcode = "0"  wpdisp = "Karambit Knife"
 		elseif string.find(wpid,"csgo_m9")!=nil then wpcode = "0"  wpdisp = "M9 Bayonet Knife"
 		elseif string.find(wpid,"csgo_daggers")!=nil then wpcode = "0"  wpdisp = "Shadow Daggers"
-		--elseif string.find(wpid,"ak47")!=nil 
-		--or string.find(wpid,"ak74")!=nil 
-		--or string.find(wpid,"an94")!=nil then wpcode = "1"  wpdisp = wpname
-		--elseif string.find(wpid,"glock")!=nil
-		--or string.find(wpid,"m9k_hk45")!=nil
-		--or string.find(wpid,"colt1911")!=nil  then wpcode = "4"  wpdisp = wpname
+
+		--⨌***** If was'nt any of them
 		else
 			wpcode="0"
 			wpdisp=wpname
