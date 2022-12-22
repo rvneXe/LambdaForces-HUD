@@ -230,6 +230,9 @@ if LocalPlayer then
 		xx=w*ScreenVars.x
 		yy=h-h*(ScreenVars.y)
 		
+		if !myplayer:IsValid() then return end
+
+		
 
 		---\/------------------------------\/--
 		---     Health
