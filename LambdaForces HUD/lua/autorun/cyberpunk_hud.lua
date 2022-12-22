@@ -360,7 +360,7 @@ if LocalPlayer then
 		
 			OldArmor = myplayer:Armor()
 			
-			CyberpunkUIShape(xx+210, yy, BGColor, ArmorGlobalColor, 204, 80, -EleShape, 2, "armor")
+			CyberpunkUIShape(xx+210, yy, BGColor, ArmorGlobalColor, 200, 80, -EleShape, 2, "armor")
 
 			ArmorNumInfo.pos = {xx+335,yy-45}
 			ArmorNumInfo.color = ArmorGlobalColor
