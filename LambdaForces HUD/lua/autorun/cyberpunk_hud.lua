@@ -16,6 +16,7 @@ local accentb = CreateClientConVar( "lfh_accent_color_b", 255, true, false, "Lam
 local accenta = CreateClientConVar( "lfh_accent_color_a", 230, true, false, "LambdaForces HUD BG Opacity", 0, 255 )
 local playerwantsaux = CreateClientConVar( "lfh_enable_aux", 1, true, false, "Should HUD Display H.E.V Suit Power?", 0, 1 )
 local shape_ele = CreateClientConVar( "lfh_shape_el", "-16", true, false, "LambdaForces HUD Elements Shape\n-16 = Parallelogram\n-1 = Rectangle")
+
 local gmodsuit = GetConVar("gmod_suit")
 
 if LocalPlayer then
@@ -180,8 +181,7 @@ if LocalPlayer then
 		local myplayer = LocalPlayer()
 		if !IsValid(myplayer) then 
 			return 
-		end
-		if !myplayer:Alive() then 
+		elseif !myplayer:Alive() then 
 			return false 
 		end
 		return ( GetConVarNumber("cl_drawhud",1) == 1 ) and true or false
@@ -422,6 +422,7 @@ if LocalPlayer then
 
 			CyberpunkUIShape(xx-xx+47, yy-84, AUXBGColor, AUXColor, 204, 40, 1, 2, "power")
 
+
 			AUXInfo.pos = {xx+35,yy-110}
 			AUXInfo.color = AUXColor
 			AUXInfo.text = "AUX Power"
@@ -431,12 +432,18 @@ if LocalPlayer then
 			surface.DrawRect(xx-xx+61, yy-96, 180*auxpercent,4 )
 		end	
 
+
 		xx = ScrW() -- to sync positions with resolution
 
-
+		-- =============================================================================================
+		------------------------------     RIGHT HUD SIDE
+		-- =============================================================================================
 		---\/------------------------------\/--
 		---     Weapon & Ammo
 		---\/------------------------------\/--
+
+		if myplayer:GetActiveWeapon():IsValid() == false then return end
+
 		local AmmoGlobalColor = AccentColor
 		local ShapeWidth
 		local wp = myplayer:GetActiveWeapon()
@@ -444,6 +451,9 @@ if LocalPlayer then
 		local wpname = wp:GetPrintName() 
 		local wpdisp
 		local wpcode
+		
+		
+
 
 		--⨌***** Half-Life/Gmod weapons
 		if wpid=="weapon_smg1" then wpcode = "a"   wpdisp = "SMG"
@@ -587,9 +597,7 @@ if LocalPlayer then
 		CyberpunkUIShape(xx-ShapeWidth-10, yy, BGColor, AmmoGlobalColor, ShapeWidth, 80, EleShape+2, 2, "weapon")
 		draw.Text(WeaponNameInfo)
 		draw.Text(WeaponIconInfo)
-		
-		
-
+	
 		if ammo1type != -1 then
 			
 			AmmoInfo.color = AmmoGlobalColor
@@ -633,8 +641,6 @@ if LocalPlayer then
 		end
 
 		xx = ScrW()-ShapeWidth-10
-		
-
 
 		-------- STYLE ----------------------
 		local wpstyle = string.sub(wpname, string.len(wpdisp)+4 )
@@ -661,8 +667,10 @@ if LocalPlayer then
 		
 	end
 	
-	hook.Add( 'HUDPaint', 'zDrawHUD', DrawTheHUD )
+	hook.Add( 'HUDPaint', 'zLFHUD_DrawHUD', DrawTheHUD )
+
 	hook.Add( 'HUDShouldDraw', 'HideHUD', HideHUD )
+
 
 	local function CusElMenu( Panel )
 		Panel:ClearControls()
