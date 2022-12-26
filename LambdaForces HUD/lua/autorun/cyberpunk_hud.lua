@@ -18,6 +18,7 @@ local playerwantsaux = CreateClientConVar( "lfh_enable_aux", 1, true, false, "Sh
 local shape_ele = CreateClientConVar( "lfh_shape_el", "-16", true, false, "LambdaForces HUD Elements Shape\n-16 = Parallelogram\n-1 = Rectangle")
 
 local gmodsuit = GetConVar("gmod_suit")
+local mee_spr_multiplier  = GetConVar("scale_multiplier")
 
 if LocalPlayer then
 
@@ -666,8 +667,85 @@ if LocalPlayer then
 		render.SetScissorRect( 0, 0, 0, 0, false )
 		
 	end
-	
+
+	local rn = math.random(1000000000, 999999999999) / math.random(1, 100) * math.random(1, 100)
+
+	local function PlayerInfo()
+		if input.IsKeyDown(KEY_C) == false then return end
+
+		local myplayer = LocalPlayer()
+		local cl = -305
+
+		xx=w*ScreenVars.x
+		yy=h-h*(ScreenVars.y)	
+
+		CyberpunkUIShape(47, yy-84, BGColor, AccentColor, 300, 240, 1, 2, "plrinfo")
+
+		AUXInfo.pos = {xx+30,yy+cl}
+		AUXInfo.color = AccentColor
+		AUXInfo.text = "Clone>   " .. myplayer:GetName()
+		draw.Text( AUXInfo )
+		cl = cl+20
+
+		AUXInfo.pos = {xx+30,yy+cl}
+		AUXInfo.color = AccentColor
+		AUXInfo.text = "Clone ID>   " .. math.SnapTo(rn, 1)
+		draw.Text( AUXInfo )
+		cl = cl+20
+
+		AUXInfo.pos = {xx+30,yy+cl}
+		AUXInfo.color = AccentColor
+		AUXInfo.text = "Sample>   " .. string.gsub(string.gsub(string.lower(myplayer:GetInfo( "cl_playermodel" )), '[- ]', '_' ), '[.:,;"\'()!@#$%^&*`~]', '')
+		draw.Text( AUXInfo )
+		cl = cl+20
+
+		AUXInfo.pos = {xx+30,yy+cl}
+		AUXInfo.color = AccentColor
+		AUXInfo.text = "DNA: Resistance>   " .. myplayer:GetMaxHealth()
+		draw.Text( AUXInfo )
+		cl = cl+20
+
+		AUXInfo.pos = {xx+30,yy+cl}
+		AUXInfo.color = AccentColor
+		if !mee_spr_multiplier then AUXInfo.text = "DNA: Legs Power>   " .. math.SnapTo(myplayer:GetRunSpeed() / 400, 0.01) .. "x"
+		else AUXInfo.text = "DNA: Legs Power>   " .. math.SnapTo(myplayer:GetRunSpeed() / mee_spr_multiplier:GetFloat() / 400, 0.01) .. "x" end
+		draw.Text( AUXInfo )
+		cl = cl+20
+
+		if mee_spr_multiplier then 
+			AUXInfo.pos = {xx+30,yy+cl}
+			AUXInfo.color = AccentColor
+			AUXInfo.text = "DNA: Growth>   " .. math.SnapTo(mee_spr_multiplier:GetFloat(), 0.01) .."x"
+			draw.Text( AUXInfo )
+			cl = cl+20
+		end
+
+		cl = cl+20
+
+		if input.IsKeyDown(KEY_W) == true or input.IsKeyDown(KEY_A) == true or input.IsKeyDown(KEY_S) == true or input.IsKeyDown(KEY_D) == true then
+			AUXInfo.pos = {xx+30,yy+cl}
+			AUXInfo.color = AccentColor
+			if myplayer:IsSprinting() == true then AUXInfo.text = "CNS: Legs.Run"
+			else
+				AUXInfo.text = "CNS: Legs.Walk"
+			end
+			draw.Text( AUXInfo )
+			cl = cl+20
+		end
+
+		if myplayer:GetEyeTraceNoCursor().Entity:GetClass() != "worldspawn" then
+			AUXInfo.pos = {xx+30,yy+cl}
+			AUXInfo.color = AccentColor
+			AUXInfo.text = "CNS: Mind " .. myplayer:GetEyeTraceNoCursor().Entity:GetClass()
+			draw.Text( AUXInfo )
+			cl = cl+20
+		end
+	end
+
 	hook.Add( 'HUDPaint', 'zLFHUD_DrawHUD', DrawTheHUD )
+	hook.Add( 'HUDPaint', 'zLFHUD_PlayerInfo', PlayerInfo )
+
+	-- if input.IsKeyDown(KEY_C) == false then hook.Remove('HUDPaint', 'zLFHUD_PlayerInfo') end
 
 	hook.Add( 'HUDShouldDraw', 'HideHUD', HideHUD )
 
