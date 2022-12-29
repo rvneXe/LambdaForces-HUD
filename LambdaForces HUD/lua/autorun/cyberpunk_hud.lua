@@ -661,7 +661,7 @@ if LocalPlayer then
 	local rn = math.random(1000000000, 999999999999) / math.random(1, 100) * math.random(1, 100)
 
 	local function PlayerInfo()
-		if input.IsKeyDown(KEY_C) == false then return end
+		if input.IsKeyDown(input.GetKeyCode(input.LookupBinding("+menu_context"))) == false then return end
 
 		local myplayer = LocalPlayer()
 		local cl = -305
