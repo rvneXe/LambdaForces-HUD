@@ -722,9 +722,11 @@ if LocalPlayer then
 
 		cl = cl+20
 
-		if input.IsKeyDown(KEY_W) == true or input.IsKeyDown(KEY_A) == true or input.IsKeyDown(KEY_S) == true or input.IsKeyDown(KEY_D) == true then
+		if input.IsKeyDown(input.GetKeyCode(input.LookupBinding("+forward"))) == true 
+		or input.IsKeyDown(input.GetKeyCode(input.LookupBinding("+back"))) == true 
+		or input.IsKeyDown(input.GetKeyCode(input.LookupBinding("+moveleft"))) == true 
+		or input.IsKeyDown(input.GetKeyCode(input.LookupBinding("+moveright"))) == true then
 			AUXInfo.pos = {xx+30,yy+cl}
-			AUXInfo.color = AccentColor
 			if myplayer:IsSprinting() == true then AUXInfo.text = "CNS: Legs.Run"
 			else
 				AUXInfo.text = "CNS: Legs.Walk"
