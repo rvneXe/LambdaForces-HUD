@@ -688,6 +688,7 @@ if LocalPlayer then
 		cl = cl+20
 
 		AUXInfo.pos = {xx+30,yy+cl}
+		AUXInfo.text = "Latency>   " .. myplayer:Ping()
 		draw.Text( AUXInfo )
 		cl = cl+20
 
