@@ -740,6 +740,20 @@ if LocalPlayer then
 			cl = cl+20
 		end
 
+		if input.IsMouseDown(input.GetKeyCode(input.LookupBinding("+attack"))) == true then
+			AUXInfo.pos = {xx+30,yy+cl}
+			AUXInfo.text = "CNS: Arms.Click"
+			draw.Text( AUXInfo )
+			cl = cl+20
+		end
+
+		if input.IsMouseDown(input.GetKeyCode(input.LookupBinding("+attack2"))) == true then
+			AUXInfo.pos = {xx+30,yy+cl}
+			AUXInfo.text = "CNS: Arms.RightClick"
+			draw.Text( AUXInfo )
+			cl = cl+20
+		end
+
 		if myplayer:GetEyeTraceNoCursor().Entity:GetClass() != "worldspawn" then
 			AUXInfo.pos = {xx+30,yy+cl}
 			AUXInfo.color = AccentColor
