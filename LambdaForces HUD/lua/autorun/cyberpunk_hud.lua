@@ -706,12 +706,21 @@ if LocalPlayer then
 
 		AUXInfo.pos = {xx+30,yy+cl}
 		AUXInfo.color = AccentColor
-		if !mee_spr_multiplier then AUXInfo.text = "DNA: Legs Power>   " .. math.SnapTo(myplayer:GetRunSpeed() / 400, 0.01) .. "x"
-		else AUXInfo.text = "DNA: Legs Power>   " .. math.SnapTo(myplayer:GetRunSpeed() / mee_spr_multiplier:GetFloat() / 400, 0.01) .. "x" end
 		AUXInfo.text = "DNA: Absorbtion>   " .. myplayer:GetMaxHealth()
 		draw.Text( AUXInfo )
 		cl = cl+20
 
+		local MovingSpeed
+		if !mee_spr_multiplier then
+			MovingSpeed = math.SnapTo(myplayer:GetRunSpeed() / 400, 0.01)
+		else
+			MovingSpeed = math.SnapTo(myplayer:GetRunSpeed() / mee_spr_multiplier:GetFloat() / 400, 0.01)
+		end
+		AUXInfo.pos = {xx+30,yy+cl}
+		AUXInfo.text = "DNA: Legs Power>   " .. MovingSpeed .. "x" 
+		draw.Text( AUXInfo )
+		cl = cl+20
+		
 		if mee_spr_multiplier then 
 			AUXInfo.pos = {xx+30,yy+cl}
 			AUXInfo.color = AccentColor
