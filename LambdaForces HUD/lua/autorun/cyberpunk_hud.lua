@@ -659,6 +659,9 @@ if LocalPlayer then
 	end
 
 	local rn = math.random(1000000000, 999999999999) / math.random(1, 100) * math.random(1, 100)
+	if string.len(rn) > 12 then
+		rn = rn / 10
+	end
 
 	local function PlayerInfo()
 		if input.IsKeyDown(input.GetKeyCode(input.LookupBinding("+menu_context"))) == false then return end
