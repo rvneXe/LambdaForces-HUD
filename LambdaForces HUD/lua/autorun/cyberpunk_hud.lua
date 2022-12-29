@@ -701,7 +701,6 @@ if LocalPlayer then
 
 		AUXInfo.pos = {xx+30,yy+cl}
 		AUXInfo.color = AccentColor
-		AUXInfo.text = "DNA: Resistance>   " .. myplayer:GetMaxHealth()
 		draw.Text( AUXInfo )
 		cl = cl+20
 
@@ -709,6 +708,7 @@ if LocalPlayer then
 		AUXInfo.color = AccentColor
 		if !mee_spr_multiplier then AUXInfo.text = "DNA: Legs Power>   " .. math.SnapTo(myplayer:GetRunSpeed() / 400, 0.01) .. "x"
 		else AUXInfo.text = "DNA: Legs Power>   " .. math.SnapTo(myplayer:GetRunSpeed() / mee_spr_multiplier:GetFloat() / 400, 0.01) .. "x" end
+		AUXInfo.text = "DNA: Absorbtion>   " .. myplayer:GetMaxHealth()
 		draw.Text( AUXInfo )
 		cl = cl+20
 
@@ -759,7 +759,7 @@ if LocalPlayer then
 		if myplayer:GetEyeTraceNoCursor().Entity:GetClass() != "worldspawn" then
 			AUXInfo.pos = {xx+30,yy+cl}
 			AUXInfo.color = AccentColor
-			AUXInfo.text = "CNS: Mind " .. myplayer:GetEyeTraceNoCursor().Entity:GetClass()
+			AUXInfo.text = "CNS: Look " .. myplayer:GetEyeTraceNoCursor().Entity:GetClass()
 			draw.Text( AUXInfo )
 			cl = cl+20
 		end
