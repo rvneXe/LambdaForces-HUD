@@ -106,6 +106,21 @@ if LocalPlayer then
 	local ArmorDecrease = Color(225,10,10,225)
 	local HealingColor = Color(88,255,205,225)
 
+	-- Custom icons
+	local icon_karam = Material( "lambda/hudweapons/karam.png", "noclamp smooth" )
+	local icon_bayonet = Material( "lambda/hudweapons/bayonet.png", "noclamp smooth" )
+	local icon_bowie = Material( "lambda/hudweapons/bowie.png", "noclamp smooth" )
+	local icon_butterf = Material( "lambda/hudweapons/butterf.png", "noclamp smooth" )
+	local icon_cssk = Material( "lambda/hudweapons/cssknf.png", "noclamp smooth" )
+	local icon_ctk = Material( "lambda/hudweapons/ctknf.png", "noclamp smooth" )
+	local icon_falch = Material( "lambda/hudweapons/falch.png", "noclamp smooth" )
+	local icon_flipk = Material( "lambda/hudweapons/flipknf.png", "noclamp smooth" )
+	local icon_gutk = Material( "lambda/hudweapons/gutknf.png", "noclamp smooth" )
+	local icon_m9b = Material( "lambda/hudweapons/m9b.png", "noclamp smooth" )
+	local icon_hmank = Material( "lambda/hudweapons/hmanknf.png", "noclamp smooth" )
+	local icon_shdag = Material( "lambda/hudweapons/shdag.png", "noclamp smooth" )
+	local icon_nvj = Material( "lambda/hudweapons/nvj.png", "noclamp smooth" )
+	
 	
 	-- Define some variables to fit the HUD better in screen space
 	local ScreenVars = {
@@ -451,7 +466,7 @@ if LocalPlayer then
 		local wpname = wp:GetPrintName() 
 		local wpdisp
 		local wpcode
-		
+		local wpng
 		
 
 
@@ -473,18 +488,27 @@ if LocalPlayer then
 		-- elseif wpid=="weapon_medkit"  then wpcode = "+" wpdisp = "Medkit"
 		
 		--⨌***** ICONS for addons
-
-		--⨌***** NAMES for addons
-		elseif string.find(wpid,"csgo_bayonet")!=nil then wpcode = "0"  wpdisp = "Bayonet Knife"
-		elseif string.find(wpid,"csgo_bowie")!=nil then wpcode = "0"  wpdisp = "Bowie Knife"
-		elseif string.find(wpid,"csgo_butterfly")!=nil then wpcode = "0"  wpdisp = "Butterfly Knife"
-		elseif string.find(wpid,"csgo_falchion")!=nil then wpcode = "0"  wpdisp = "Falchion Knife"
-		elseif string.find(wpid,"csgo_flip")!=nil then wpcode = "0"  wpdisp = "Flip Knife"
-		elseif string.find(wpid,"csgo_gut")!=nil then wpcode = "0"  wpdisp = "Gut Knife"
-		elseif string.find(wpid,"csgo_huntsman")!=nil then wpcode = "0"  wpdisp = "Huntsman Knife"
-		elseif string.find(wpid,"csgo_karambit")!=nil then wpcode = "0"  wpdisp = "Karambit Knife"
-		elseif string.find(wpid,"csgo_m9")!=nil then wpcode = "0"  wpdisp = "M9 Bayonet Knife"
-		elseif string.find(wpid,"csgo_daggers")!=nil then wpcode = "0"  wpdisp = "Shadow Daggers"
+		elseif string.find(wpid,"ak47")!=nil 
+		or string.find(wpid,"ak74")!=nil 
+		or string.find(wpid,"an94")!=nil then wpcode = "1"  wpdisp = wpname
+		elseif string.find(wpid,"glock")!=nil
+		or string.find(wpid,"m9k_hk45")!=nil
+		or string.find(wpid,"colt1911")!=nil  then wpcode = "4"  wpdisp = wpname
+		elseif string.find(wpid,"csgo_default_t")!=nil then wpcode = "3"  wpdisp = "Default T Knife"
+		elseif string.find(wpid,"csgo_default")!=nil or string.find(wpid,"csgo_knife_t")!=nil then wpcode = ""  wpdisp = "Default T Knife" wpng = "ctknife"
+		elseif string.find(wpid,"csgo_knife")!=nil then wpcode = "2"  wpdisp = "Default CT Knife"
+		elseif string.find(wpid,"csgo_bayonet")!=nil then wpcode = ""  wpdisp = "Bayonet Knife"  wpng = "bayonet"
+		elseif string.find(wpid,"csgo_bowie")!=nil then wpcode = ""  wpdisp = "Bowie Knife"  wpng = "bowie"
+		elseif string.find(wpid,"csgo_butterfly")!=nil then wpcode = ""  wpdisp = "Butterfly Knife"  wpng = "butterf"
+		elseif string.find(wpid,"csgo_cssource")!=nil then wpcode = ""  wpdisp = "CS:Source Knife"  wpng = "cssknife"
+		elseif string.find(wpid,"csgo_falchion")!=nil then wpcode = ""  wpdisp = "Falchion Knife"  wpng = "falch"
+		elseif string.find(wpid,"csgo_flip")!=nil then wpcode = ""  wpdisp = "Flip Knife"  wpng = "flipknife"
+		elseif string.find(wpid,"csgo_gut")!=nil then wpcode = ""  wpdisp = "Gut Knife"  wpng = "gutknife"
+		elseif string.find(wpid,"csgo_huntsman")!=nil then wpcode = ""  wpdisp = "Huntsman Knife"  wpng = "hmanknife"
+		elseif string.find(wpid,"csgo_karambit")!=nil then wpcode = ""  wpdisp = "Karambit Knife"  wpng = "karam"
+		elseif string.find(wpid,"csgo_m9")!=nil then wpcode = ""  wpdisp = "M9 Bayonet Knife"  wpng = "m9bayow"
+		elseif string.find(wpid,"csgo_daggers")!=nil then wpcode = ""  wpdisp = "Shadow Daggers"  wpng = "shdag"
+		elseif string.find(wpid,"csgo_navaja")!=nil then wpcode = ""  wpdisp = "Navaja Knfie"  wpng = "nvj"
 
 		--⨌***** If was'nt any of them
 		else
@@ -588,6 +612,24 @@ if LocalPlayer then
 		CyberpunkUIShape(xx-ShapeWidth-10, yy, BGColor, AmmoGlobalColor, ShapeWidth, 80, EleShape+2, 2, "weapon")
 		draw.Text(WeaponNameInfo)
 		draw.Text(WeaponIconInfo)
+		if wpcode == "" then
+			if     wpng == "bayonet" then surface.SetMaterial(icon_bayonet)
+			elseif wpng == "karam" then surface.SetMaterial(icon_karam)
+			elseif wpng == "bowie" then surface.SetMaterial(icon_bowie)
+			elseif wpng == "butterf" then surface.SetMaterial(icon_butterf)
+			elseif wpng == "cssknife" then surface.SetMaterial(icon_cssk)
+			elseif wpng == "ctknife" then surface.SetMaterial(icon_ctk)
+			elseif wpng == "falch" then surface.SetMaterial(icon_falch)
+			elseif wpng == "flipknife" then surface.SetMaterial(icon_flipk)
+			elseif wpng == "gutknife" then surface.SetMaterial(icon_gutk)
+			elseif wpng == "m9bayo" then surface.SetMaterial(icon_m9b)
+			elseif wpng == "hmanknife" then surface.SetMaterial(icon_hmank)
+			elseif wpng == "shdag" then surface.SetMaterial(icon_shdag)
+			elseif wpng == "nvj" then surface.SetMaterial(icon_nvj)
+			end
+			surface.DrawTexturedRect(xx-191, yy-85, 170, 85)
+			surface.SetTexture(0)
+		end
 	
 		if ammo1type != -1 then
 			
