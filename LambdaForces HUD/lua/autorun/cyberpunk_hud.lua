@@ -96,8 +96,8 @@ if LocalPlayer then
 	} )
 
 	-- Add HUD Colors
-	local BGColor = Color(10,10,10,229)
-	local AccentColor = Color(0, 255, 255,255)
+	local BGColor = Color(10,10,10,accenta:GetInt())
+	local AccentColor = Color(accentr:GetInt(), accentg:GetInt(), accentb:GetInt(),255)
 	local DisabledColor = Color(128,128,128,225)
 	local Warning = Color(255,156,0,255)
 	local EmptyMag = Color(255,0,0,255)
