@@ -733,6 +733,13 @@ if LocalPlayer then
 			cl = cl+20
 		end
 
+		if input.IsKeyDown(input.GetKeyCode(input.LookupBinding("mightyfootengaged"))) == true then
+			AUXInfo.pos = {xx+30,yy+cl}
+			AUXInfo.text = "CNS: Legs.Kick"
+			draw.Text( AUXInfo )
+			cl = cl+20
+		end
+
 		if myplayer:GetEyeTraceNoCursor().Entity:GetClass() != "worldspawn" then
 			AUXInfo.pos = {xx+30,yy+cl}
 			AUXInfo.color = AccentColor
