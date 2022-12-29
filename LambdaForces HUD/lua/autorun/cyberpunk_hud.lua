@@ -106,7 +106,6 @@ if LocalPlayer then
 	local ArmorDecrease = Color(225,10,10,225)
 	local HealingColor = Color(88,255,205,225)
 
-	--print(AccentColor)
 	
 	-- Define some variables to fit the HUD better in screen space
 	local ScreenVars = {
@@ -474,15 +473,6 @@ if LocalPlayer then
 		-- elseif wpid=="weapon_medkit"  then wpcode = "+" wpdisp = "Medkit"
 		
 		--⨌***** ICONS for addons
-		--elseif string.find(wpid,"ak47")!=nil 
-		--or string.find(wpid,"ak74")!=nil 
-		--or string.find(wpid,"an94")!=nil then wpcode = "1"  wpdisp = wpname
-		--elseif string.find(wpid,"glock")!=nil
-		--or string.find(wpid,"m9k_hk45")!=nil
-		--or string.find(wpid,"colt1911")!=nil  then wpcode = "4"  wpdisp = wpname
-		--elseif string.find(wpid,"csgo_default_t")!=nil then wpcode = "3"  wpdisp = "Default T Knife"
-		--elseif string.find(wpid,"csgo_default")!=nil or string.find(wpid,"csgo_knife_t")!=nil then wpcode = "3"  wpdisp = "Default T Knife"
-		--elseif string.find(wpid,"csgo_knife")!=nil then wpcode = "2"  wpdisp = "Default CT Knife"
 
 		--⨌***** NAMES for addons
 		elseif string.find(wpid,"csgo_bayonet")!=nil then wpcode = "0"  wpdisp = "Bayonet Knife"
@@ -527,7 +517,7 @@ if LocalPlayer then
 			['color'] = AmmoGlobalColor
 		}
 
-
+		
 
 		local ammo1 = wp:Clip1()
 		local ammo1type = wp:GetPrimaryAmmoType()
@@ -688,24 +678,20 @@ if LocalPlayer then
 		cl = cl+20
 
 		AUXInfo.pos = {xx+30,yy+cl}
-		AUXInfo.color = AccentColor
 		AUXInfo.text = "Clone ID>   " .. math.SnapTo(rn, 1)
 		draw.Text( AUXInfo )
 		cl = cl+20
 
 		AUXInfo.pos = {xx+30,yy+cl}
-		AUXInfo.color = AccentColor
 		AUXInfo.text = "Sample>   " .. string.gsub(string.gsub(string.lower(myplayer:GetInfo( "cl_playermodel" )), '[- ]', '_' ), '[.:,;"\'()!@#$%^&*`~]', '')
 		draw.Text( AUXInfo )
 		cl = cl+20
 
 		AUXInfo.pos = {xx+30,yy+cl}
-		AUXInfo.color = AccentColor
 		draw.Text( AUXInfo )
 		cl = cl+20
 
 		AUXInfo.pos = {xx+30,yy+cl}
-		AUXInfo.color = AccentColor
 		AUXInfo.text = "DNA: Absorbtion>   " .. myplayer:GetMaxHealth()
 		draw.Text( AUXInfo )
 		cl = cl+20
@@ -767,7 +753,6 @@ if LocalPlayer then
 
 		if myplayer:GetEyeTraceNoCursor().Entity:GetClass() != "worldspawn" then
 			AUXInfo.pos = {xx+30,yy+cl}
-			AUXInfo.color = AccentColor
 			AUXInfo.text = "CNS: Look " .. myplayer:GetEyeTraceNoCursor().Entity:GetClass()
 			draw.Text( AUXInfo )
 			cl = cl+20
@@ -776,11 +761,7 @@ if LocalPlayer then
 
 	hook.Add( 'HUDPaint', 'zLFHUD_DrawHUD', DrawTheHUD )
 	hook.Add( 'HUDPaint', 'zLFHUD_PlayerInfo', PlayerInfo )
-
-	-- if input.IsKeyDown(KEY_C) == false then hook.Remove('HUDPaint', 'zLFHUD_PlayerInfo') end
-
 	hook.Add( 'HUDShouldDraw', 'HideHUD', HideHUD )
-
 
 	local function CusElMenu( Panel )
 		Panel:ClearControls()
